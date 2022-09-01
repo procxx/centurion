@@ -45,10 +45,17 @@ find_package(SDL2_image REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 
+add_library(centurion INTERFACE)
+add_library(centurion::centurion ALIAS centurion)
+target_include_directories(centurion INTERFACE ${CEN_SOURCE_DIR})
+target_link_libraries(centurion INTERFACE SDL2 SDL2_image SDL2_mixer SDL2_ttf)
+
 if (CEN_COVERAGE)
   include(CodeCoverage)
   append_coverage_compiler_flags()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 --coverage")
+  target_compile_options(centurion INTERFACE ${COVERAGE_COMPILER_FLAGS})
+  target_compile_options(centurion INTERFACE "-O0 --coverage")
 endif ()
 
 if (CEN_TESTS)
